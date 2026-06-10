@@ -1,18 +1,14 @@
-import psycopg2
+from flask import Flask
 
-try:
-    conn = psycopg2.connect(
-        dbname="notemind",
-        user="notemind_user",
-        password="notemind123",
-        host="localhost",
-        port="5432"
-    )
+app = Flask(__name__)
 
-    print("Database Connected Successfully!")
+app.secret_key = "notemind_secret_key"
 
-    conn.close()
 
-except Exception as e:
-    print("Connection Failed")
-    print(e)
+@app.route("/")
+def home():
+    return "Welcome to NoteMind"
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -1,5 +1,6 @@
 import bcrypt
 from models.user_model import create_user
+from models.user_model import (create_user,get_user_by_email)
 
 def hash_password(password):
 
@@ -40,3 +41,18 @@ def register_user(
     )
 
     return True
+
+def login_user(email, password):
+
+    user = get_user_by_email(email)
+
+    if not user:
+        return None
+
+    if verify_password(
+        password,
+        user["password_hash"]
+    ):
+        return user
+
+    return None

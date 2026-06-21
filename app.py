@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask,session,redirect
 
 from routes.auth_routes import auth_bp
 
@@ -13,7 +13,19 @@ app.register_blueprint(
 
 @app.route("/")
 def home():
-    return "Welcome to NoteMind"
+    return redirect("/login")
+
+@app.route("/dashboard")
+def dashboard():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    return f"""
+    Welcome {session['user_name']}
+    <br><br>
+    <a href='/logout'>Logout</a>
+    """
 
 
 if __name__ == "__main__":

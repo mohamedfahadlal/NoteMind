@@ -1,5 +1,5 @@
 import bcrypt
-
+from models.user_model import create_user
 
 def hash_password(password):
 
@@ -22,3 +22,21 @@ def verify_password(
         plain_password.encode("utf-8"),
         hashed_password.encode("utf-8")
     )
+
+def register_user(
+    name,
+    email,
+    password
+):
+
+    hashed_password = hash_password(
+        password
+    )
+
+    create_user(
+        name,
+        email,
+        hashed_password
+    )
+
+    return True

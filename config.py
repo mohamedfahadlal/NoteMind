@@ -1,0 +1,5 @@
+DB_NAME = "notemind"
+DB_USER = "notemind_user"
+DB_PASSWORD = "notemind123"
+DB_HOST = "localhost"
+DB_PORT = "5432"

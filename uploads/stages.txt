@@ -1,0 +1,496 @@
+Before writing a single line of code, let's structure this properly. Since you're building this in **4 weeks**, we should build it incrementally so that at every stage you have a working project.
+
+# Stage 0: Planning & Design (1-2 Days)
+
+## Goal
+
+Finalize requirements and architecture.
+
+### Deliverables
+
+* Project title
+* Features list
+* Tech stack
+* Database schema
+* Folder structure
+* UI wireframes
+
+### Output
+
+You should know:
+
+```text
+User
+ ↓
+Upload Notes
+ ↓
+AI Processing
+ ↓
+ShaktiDB
+ ↓
+Search & Dashboard
+```
+
+---
+
+# Stage 1: Project Setup & Database (2-3 Days)
+
+## Goal
+
+Create the foundation.
+
+### Tasks
+
+### Setup Environment
+
+```bash
+python -m venv venv
+pip install flask
+```
+
+### Create Project Structure
+
+```text
+notemind/
+│
+├── app.py
+├── config.py
+│
+├── static/
+├── templates/
+│
+├── uploads/
+│
+├── models/
+├── services/
+├── database/
+│
+└── requirements.txt
+```
+
+### Setup ShaktiDB
+
+Create database:
+
+```sql
+CREATE DATABASE notemind;
+```
+
+### Create Tables
+
+* users
+* notes
+* categories
+* summaries
+* tags
+
+### Deliverable
+
+✅ Flask running
+
+✅ ShaktiDB connected
+
+---
+
+# Stage 2: User Authentication (2 Days)
+
+## Goal
+
+Users can register and login.
+
+### Features
+
+#### Register
+
+```text
+Name
+Email
+Password
+```
+
+#### Login
+
+```text
+Email
+Password
+```
+
+### Tables
+
+```sql
+users
+```
+
+### Deliverable
+
+✅ Authentication works
+
+---
+
+# Stage 3: Note Upload System (3 Days)
+
+## Goal
+
+Users can upload notes.
+
+### Supported
+
+```text
+PDF
+DOCX
+TXT
+```
+
+### Features
+
+* Upload file
+* Store file
+* Save metadata
+
+### Table
+
+```sql
+notes
+```
+
+### Deliverable
+
+✅ Notes uploaded successfully
+
+---
+
+# Stage 4: Text Extraction Engine (3 Days)
+
+## Goal
+
+Read uploaded files.
+
+### PDF
+
+```python
+pdfplumber
+```
+
+### DOCX
+
+```python
+python-docx
+```
+
+### TXT
+
+```python
+open()
+```
+
+### Workflow
+
+```text
+Upload
+ ↓
+Extract Text
+ ↓
+Store in DB
+```
+
+### Deliverable
+
+✅ Full note text stored in ShaktiDB
+
+---
+
+# Stage 5: Auto Categorization (3 Days)
+
+## Goal
+
+Automatically detect subject.
+
+### Categories
+
+```text
+DBMS
+OS
+CN
+DSA
+ML
+```
+
+### Version 1
+
+Keyword-based
+
+Example:
+
+```python
+if "normalization" in text:
+    category="DBMS"
+```
+
+### Table
+
+```sql
+categories
+```
+
+### Deliverable
+
+✅ Uploaded note gets category
+
+---
+
+# Stage 6: Summary Generation (3 Days)
+
+## Goal
+
+Generate concise summary.
+
+### Input
+
+```text
+20 page PDF
+```
+
+### Output
+
+```text
+Short Summary
+```
+
+### Options
+
+#### Easy
+
+```python
+sumy
+```
+
+#### Better
+
+```python
+transformers
+```
+
+### Table
+
+```sql
+summaries
+```
+
+### Deliverable
+
+✅ Summary appears automatically
+
+---
+
+# Stage 7: Keyword Extraction (2 Days)
+
+## Goal
+
+Extract important topics.
+
+### Example
+
+```text
+Normalization
+SQL
+Transactions
+```
+
+### Store
+
+```sql
+tags
+```
+
+### Deliverable
+
+✅ Auto-generated tags
+
+---
+
+# Stage 8: Dashboard (3 Days)
+
+## Goal
+
+Create usable UI.
+
+### Show
+
+* Total Notes
+* Categories
+* Recent Uploads
+* Summaries
+* Tags
+
+### Deliverable
+
+✅ Functional dashboard
+
+---
+
+# Stage 9: Smart Search (4 Days)
+
+## Goal
+
+Search by meaning, not exact words.
+
+Example:
+
+Search:
+
+```text
+remove duplicate data
+```
+
+Find:
+
+```text
+Normalization
+```
+
+### Tools
+
+```python
+sentence-transformers
+```
+
+### Workflow
+
+```text
+Notes
+ ↓
+Embeddings
+ ↓
+Vector Search
+```
+
+### Deliverable
+
+✅ Semantic search
+
+---
+
+# Stage 10: Recommendation System (3 Days)
+
+## Goal
+
+Suggest related notes.
+
+Example:
+
+Viewing:
+
+```text
+Normalization
+```
+
+Recommend:
+
+```text
+SQL
+Transactions
+Indexing
+```
+
+### Based On
+
+Embedding similarity.
+
+### Deliverable
+
+✅ Related notes panel
+
+---
+
+# Stage 11: Analytics (2 Days)
+
+## Goal
+
+Track usage.
+
+### Store
+
+* Searches
+* Views
+* Uploads
+
+### Dashboard
+
+```text
+Most Viewed Notes
+Popular Categories
+```
+
+### Deliverable
+
+✅ Learning analytics
+
+---
+
+# Stage 12: Finalization (2-3 Days)
+
+## Goal
+
+Polish project.
+
+### Tasks
+
+* Error handling
+* UI improvements
+* Documentation
+* Screenshots
+* Presentation
+
+---
+
+# MVP vs Final Version
+
+## MVP (Must Have)
+
+* Authentication
+* Upload Notes
+* Extract Text
+* Categorization
+* Summary
+* Dashboard
+
+This alone is a complete project.
+
+---
+
+## Advanced Version
+
+Add:
+
+* Semantic Search
+* Recommendations
+* Analytics
+
+These are the features that make it feel like an AI product.
+
+---
+
+## What I would do
+
+### Phase 1 (Week 1-2)
+
+Stages 1 → 6
+
+You already have:
+
+* ShaktiDB
+* Flask
+* Upload
+* AI Categorization
+* AI Summary
+
+### Phase 2 (Week 3)
+
+Stages 7 → 8
+
+### Phase 3 (Week 4)
+
+Stages 9 → 12
+
+This approach ensures that even if you run out of time, you'll still have a fully working AI-powered project rather than an unfinished one.
+

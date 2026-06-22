@@ -1,4 +1,4 @@
-from flask import Flask,session,redirect
+from flask import Flask,session,redirect,render_template
 
 from routes.auth_routes import auth_bp
 
@@ -21,12 +21,26 @@ def dashboard():
     if "user_id" not in session:
         return redirect("/login")
 
-    return f"""
-    Welcome {session['user_name']}
-    <br><br>
-    <a href='/logout'>Logout</a>
-    """
+    return render_template(
+        "dashboard.html",
+        user_name=session["user_name"]
+    )
+
+@app.route("/upload")
+def upload():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    return "Upload Page Coming Soon"
 
 
+@app.route("/my-notes")
+def my_notes():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    return "My Notes Page Coming Soon"
 if __name__ == "__main__":
     app.run(debug=True)

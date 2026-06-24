@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Notes</title>
+</head>
+
+<body>
+
+<h1>My Notes</h1>
+
+<a href="/dashboard">Dashboard</a>
+
+<hr>
+
+{% if notes %}
+
+    {% for note in notes %}
+
+        <h3>{{ note.title }}</h3>
+
+        <p>
+            File: {{ note.file_name }}
+        </p>
+
+        <p>
+            Type: {{ note.file_type }}
+        </p>
+
+        <p>
+            Uploaded:
+            {{ note.uploaded_at }}
+        </p>
+
+        <hr>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>No notes uploaded yet.</p>
+
+{% endif %}
+
+</body>
+</html>

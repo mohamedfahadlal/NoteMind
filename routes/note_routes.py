@@ -7,7 +7,7 @@ from flask import (
     current_app
 )
 
-from services.note_service import save_note
+from services.note_service import save_note,fetch_user_notes
 
 note_bp = Blueprint(
     "notes",
@@ -44,4 +44,19 @@ def upload():
 
     return render_template(
         "upload.html"
+    )
+
+@note_bp.route("/my-notes")
+def my_notes():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    notes = fetch_user_notes(
+        session["user_id"]
+    )
+
+    return render_template(
+        "my_notes.html",
+        notes=notes
     )

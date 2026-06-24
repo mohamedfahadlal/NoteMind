@@ -2,7 +2,8 @@ import os
 
 from werkzeug.utils import secure_filename
 
-from models.note_model import create_note
+from models.note_model import create_note,get_notes_by_user
+
 
 
 ALLOWED_EXTENSIONS = {
@@ -56,3 +57,7 @@ def save_note(
     )
 
     return True
+
+def fetch_user_notes(user_id):
+
+    return get_notes_by_user(user_id)

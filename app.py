@@ -52,13 +52,7 @@ def upload():
     return "Upload Page Coming Soon"
 
 
-@app.route("/my-notes")
-def my_notes():
 
-    if "user_id" not in session:
-        return redirect("/login")
-
-    return "Upload Successful. Notes page coming next."
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -3,7 +3,7 @@ import os
 from werkzeug.utils import secure_filename
 
 from models.note_model import create_note,get_notes_by_user,get_note_by_id,update_note_content
-
+from services.text_extractor import extract_txt,extract_docx
 
 
 ALLOWED_EXTENSIONS = {
@@ -45,11 +45,17 @@ def save_note(uploaded_file,title,user_id,upload_folder):
 
     note_id = create_note(user_id,title,filename,filepath,file_type)
 
+    content = None
+
     if file_type == "txt":
 
-        content = extract_txt_content(
-            filepath
-        )
+        content = extract_txt(filepath)
+
+    elif file_type == "docx":
+
+        content = extract_docx(filepath)
+
+    if content:
 
         update_note_content(
             note_id,

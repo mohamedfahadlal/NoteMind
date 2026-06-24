@@ -2,7 +2,7 @@ import os
 
 from werkzeug.utils import secure_filename
 
-from models.note_model import create_note,get_notes_by_user
+from models.note_model import create_note,get_notes_by_user,get_note_by_id
 
 
 
@@ -61,3 +61,7 @@ def save_note(
 def fetch_user_notes(user_id):
 
     return get_notes_by_user(user_id)
+
+def fetch_note(note_id):
+
+    return get_note_by_id(note_id)

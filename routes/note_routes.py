@@ -4,10 +4,11 @@ from flask import (
     request,
     redirect,
     session,
-    current_app
+    current_app,
+    send_file
 )
 
-from services.note_service import save_note,fetch_user_notes
+from services.note_service import save_note,fetch_user_notes,fetch_note
 
 note_bp = Blueprint(
     "notes",
@@ -59,4 +60,22 @@ def my_notes():
     return render_template(
         "my_notes.html",
         notes=notes
+    )
+
+@note_bp.route("/note/<int:note_id>")
+def open_note(note_id):
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    note = fetch_note(note_id)
+
+    if not note:
+        return "Note not found"
+
+    if note["user_id"] != session["user_id"]:
+        return "Access Denied"
+
+    return send_file(
+        note["file_path"]
     )

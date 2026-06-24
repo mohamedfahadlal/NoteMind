@@ -69,3 +69,27 @@ def get_notes_by_user(user_id):
     conn.close()
 
     return notes
+
+def get_note_by_id(note_id):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    query = """
+    SELECT *
+    FROM notes
+    WHERE id = %s
+    """
+
+    cursor.execute(
+        query,
+        (note_id,)
+    )
+
+    note = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return note

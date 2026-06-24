@@ -2,7 +2,7 @@ import os
 
 from werkzeug.utils import secure_filename
 
-from models.note_model import create_note,get_notes_by_user,get_note_by_id
+from models.note_model import create_note,get_notes_by_user,get_note_by_id,update_note_content
 
 
 
@@ -23,12 +23,7 @@ def allowed_file(filename):
     )
 
 
-def save_note(
-    uploaded_file,
-    title,
-    user_id,
-    upload_folder
-):
+def save_note(uploaded_file,title,user_id,upload_folder):
 
     if not allowed_file(
         uploaded_file.filename
@@ -48,13 +43,18 @@ def save_note(
 
     file_type = filename.split(".")[-1]
 
-    create_note(
-        user_id,
-        title,
-        filename,
-        filepath,
-        file_type
-    )
+    note_id = create_note(user_id,title,filename,filepath,file_type)
+
+    if file_type == "txt":
+
+        content = extract_txt_content(
+            filepath
+        )
+
+        update_note_content(
+            note_id,
+            content
+        )
 
     return True
 
@@ -65,3 +65,9 @@ def fetch_user_notes(user_id):
 def fetch_note(note_id):
 
     return get_note_by_id(note_id)
+
+def extract_txt_content(filepath):
+
+    with open(filepath,"r",encoding="utf-8",errors="ignore") as file:
+
+        return file.read()

@@ -30,6 +30,7 @@ def create_note(
         %s,
         %s
     )
+    RETURNING id
     """
 
     cursor.execute(
@@ -43,10 +44,14 @@ def create_note(
         )
     )
 
+    note_id = cursor.fetchone()["id"]
+
     conn.commit()
 
     cursor.close()
     conn.close()
+
+    return note_id
 
 def get_notes_by_user(user_id):
 
@@ -93,3 +98,28 @@ def get_note_by_id(note_id):
     conn.close()
 
     return note
+
+def update_note_content(note_id,content):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    query = """
+    UPDATE notes
+    SET content = %s
+    WHERE id = %s
+    """
+
+    cursor.execute(
+        query,
+        (
+            content,
+            note_id
+        )
+    )
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()

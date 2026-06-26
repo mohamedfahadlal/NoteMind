@@ -123,3 +123,89 @@ def update_note_content(note_id,content):
 
     cursor.close()
     conn.close()
+
+def assign_category(
+    note_id,
+    category_id
+):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO note_categories
+        (
+            note_id,
+            category_id
+        )
+        VALUES
+        (
+            %s,
+            %s
+        )
+        ON CONFLICT DO NOTHING
+        """,
+        (
+            note_id,
+            category_id
+        )
+    )
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+def get_category_id_by_name(
+    category_name
+):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT id
+        FROM categories
+        WHERE name = %s
+        """,
+        (
+            category_name,
+        )
+    )
+
+    result = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return result
+
+
+def get_note_category(note_id):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    query = """
+    SELECT c.name
+    FROM categories c
+    JOIN note_categories nc
+        ON c.id = nc.category_id
+    WHERE nc.note_id = %s
+    """
+
+    cursor.execute(
+        query,
+        (note_id,)
+    )
+
+    category = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return category

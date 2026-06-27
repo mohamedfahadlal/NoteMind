@@ -209,3 +209,101 @@ def get_note_category(note_id):
     conn.close()
 
     return category
+def get_tag_by_name(tag_name):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT id
+        FROM tags
+        WHERE tag_name = %s
+        """,
+        (tag_name,)
+    )
+
+    tag = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return tag
+def create_tag(tag_name):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO tags(tag_name)
+        VALUES(%s)
+        ON CONFLICT(tag_name)
+        DO NOTHING
+        """,
+        (tag_name,)
+    )
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+def assign_tag(note_id, tag_id):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO note_tags
+        (
+            note_id,
+            tag_id
+        )
+        VALUES
+        (
+            %s,
+            %s
+        )
+        ON CONFLICT DO NOTHING
+        """,
+        (
+            note_id,
+            tag_id
+        )
+    )
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+
+def get_note_tags(note_id):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT t.tag_name
+        FROM tags t
+        JOIN note_tags nt
+            ON t.id = nt.tag_id
+        WHERE nt.note_id = %s
+        """,
+        (note_id,)
+    )
+
+    tags = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return tags
+

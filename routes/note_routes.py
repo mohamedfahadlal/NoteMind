@@ -8,7 +8,7 @@ from flask import (
     send_file
 )
 
-from services.note_service import save_note,fetch_user_notes,fetch_note,fetch_note_category
+from services.note_service import save_note,fetch_user_notes,fetch_note,fetch_note_category,fetch_note_tags
 
 note_bp = Blueprint(
     "notes",
@@ -53,20 +53,19 @@ def my_notes():
     if "user_id" not in session:
         return redirect("/login")
 
-    notes = fetch_user_notes(
-    session["user_id"]
-)
+    notes = fetch_user_notes(session["user_id"])
 
     for note in notes:
 
         category = fetch_note_category(note["id"])
 
-        note["category"] = (category["name"]if category else "Uncategorized")
+        note["category"] = (category["name"] if category else "Uncategorized")
 
-    return render_template(
-        "my_notes.html",
-        notes=notes
-    )
+        tags = fetch_note_tags(note["id"])
+
+        note["tags"] = ", ".join(tag["tag_name"]for tag in tags)
+
+        return render_template("my_notes.html",notes=notes)
 
 @note_bp.route("/note/<int:note_id>")
 def open_note(note_id):

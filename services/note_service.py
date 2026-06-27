@@ -2,9 +2,12 @@ import os
 
 from werkzeug.utils import secure_filename
 
-from models.note_model import create_note,get_notes_by_user,get_note_by_id,update_note_content,get_note_category
+from models.note_model import create_note,get_notes_by_user,get_note_by_id,update_note_content,get_note_category,get_note_tags
 from services.text_extractor import extract_txt,extract_docx,extract_pdf
 from services.category_assignment import auto_assign_category
+from services.tag_assignment import auto_assign_tags
+
+
 ALLOWED_EXTENSIONS = {
     "pdf",
     "docx",
@@ -62,8 +65,7 @@ def save_note(uploaded_file,title,user_id,upload_folder):
 
         update_note_content(note_id,content)
         auto_assign_category(note_id,content)
-
-
+        auto_assign_tags(note_id,content)
     return True
 
 def fetch_user_notes(user_id):
@@ -83,3 +85,7 @@ def extract_txt_content(filepath):
 def fetch_note_category(note_id):
 
     return get_note_category(note_id)
+
+def fetch_note_tags(note_id):
+
+    return get_note_tags(note_id)

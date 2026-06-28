@@ -8,7 +8,7 @@ from flask import (
     send_file
 )
 
-from services.note_service import save_note,fetch_user_notes,fetch_note,fetch_note_category,fetch_note_tags
+from services.note_service import save_note,fetch_user_notes,fetch_note,fetch_note_category,fetch_note_tags,search_user_notes
 
 note_bp = Blueprint(
     "notes",
@@ -84,3 +84,29 @@ def open_note(note_id):
     return send_file(
         note["file_path"]
     )
+@note_bp.route("/search")
+def search():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    query = request.args.get(
+        "q",
+        ""
+    )
+
+    notes = []
+
+    if query:
+
+        notes = search_user_notes(
+            session["user_id"],
+            query
+        )
+
+    return render_template(
+        "search.html",
+        notes=notes,
+        query=query
+    )
+

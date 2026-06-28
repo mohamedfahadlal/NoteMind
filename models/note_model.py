@@ -307,3 +307,37 @@ def get_note_tags(note_id):
 
     return tags
 
+def search_notes(user_id, query):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    sql = """
+    SELECT *
+    FROM notes
+    WHERE user_id = %s
+    AND (
+        LOWER(title) LIKE LOWER(%s)
+        OR LOWER(content) LIKE LOWER(%s)
+    )
+    ORDER BY uploaded_at DESC
+    """
+
+    search = f"%{query}%"
+
+    cursor.execute(
+        sql,
+        (
+            user_id,
+            search,
+            search
+        )
+    )
+
+    notes = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return notes

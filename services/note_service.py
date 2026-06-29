@@ -2,7 +2,7 @@ import os
 
 from werkzeug.utils import secure_filename
 
-from models.note_model import create_note,get_notes_by_user,get_note_by_id,update_note_content,get_note_category,get_note_tags,search_notes
+from models.note_model import create_note,get_notes_by_user,get_note_by_id,update_note_content,get_note_category,get_note_tags,search_notes,save_search_history
 from services.text_extractor import extract_txt,extract_docx,extract_pdf
 from services.category_assignment import auto_assign_category
 from services.tag_assignment import auto_assign_tags
@@ -92,3 +92,18 @@ def fetch_note_tags(note_id):
 def search_user_notes(user_id,query):
 
     return search_notes(user_id,query)
+
+def search_user_notes(
+    user_id,
+    query
+):
+
+    save_search_history(
+        user_id,
+        query
+    )
+
+    return search_notes(
+        user_id,
+        query
+    )

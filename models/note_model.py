@@ -307,6 +307,8 @@ def get_note_tags(note_id):
 
     return tags
 
+
+
 def search_notes(user_id, query):
 
     conn = get_db_connection()
@@ -317,10 +319,10 @@ def search_notes(user_id, query):
     SELECT *
     FROM notes
     WHERE user_id = %s
-    AND (
-        LOWER(title) LIKE LOWER(%s)
-        OR LOWER(content) LIKE LOWER(%s)
-    )
+      AND (
+            title ILIKE %s
+         OR content ILIKE %s
+      )
     ORDER BY uploaded_at DESC
     """
 
@@ -341,3 +343,37 @@ def search_notes(user_id, query):
     conn.close()
 
     return notes
+
+
+def save_search_history(
+    user_id,
+    query
+):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO search_history
+        (
+            user_id,
+            query
+        )
+        VALUES
+        (
+            %s,
+            %s
+        )
+        """,
+        (
+            user_id,
+            query
+        )
+    )
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()

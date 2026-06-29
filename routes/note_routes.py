@@ -84,6 +84,7 @@ def open_note(note_id):
     return send_file(
         note["file_path"]
     )
+
 @note_bp.route("/search")
 def search():
 
@@ -93,7 +94,7 @@ def search():
     query = request.args.get(
         "q",
         ""
-    )
+    ).strip()
 
     notes = []
 
@@ -109,4 +110,3 @@ def search():
         notes=notes,
         query=query
     )
-

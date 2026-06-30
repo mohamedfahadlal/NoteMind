@@ -1,28 +1,4 @@
-TAG_KEYWORDS = [
-    "sql",
-    "normalization",
-    "primary key",
-    "foreign key",
-    "er diagram",
-    "deadlock",
-    "process",
-    "thread",
-    "semaphore",
-    "tcp",
-    "udp",
-    "router",
-    "ip address",
-    "array",
-    "linked list",
-    "stack",
-    "queue",
-    "tree",
-    "classification",
-    "regression",
-    "dataset",
-    "neural network"
-]
-
+from services.keywords import CATEGORY_KEYWORDS
 
 def extract_tags(content):
 
@@ -31,11 +7,14 @@ def extract_tags(content):
 
     content = content.lower()
 
-    found_tags = []
+    found_tags = set()
 
-    for tag in TAG_KEYWORDS:
+    for keywords in CATEGORY_KEYWORDS.values():
 
-        if tag.lower() in content:
-            found_tags.append(tag.title())
+        for keyword in keywords:
 
-    return found_tags
+            if keyword.lower() in content:
+
+                found_tags.add(keyword)
+
+    return sorted(found_tags)

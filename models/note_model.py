@@ -377,3 +377,59 @@ def save_search_history(
 
     cursor.close()
     conn.close()
+
+
+def get_all_categories():
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM categories
+        ORDER BY name
+        """
+    )
+
+    categories = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return categories
+
+
+def search_notes_by_category(
+    user_id,
+    category_id
+):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT n.*
+        FROM notes n
+        JOIN note_categories nc
+            ON n.id = nc.note_id
+        WHERE
+            n.user_id = %s
+            AND nc.category_id = %s
+        ORDER BY n.uploaded_at DESC
+        """,
+        (
+            user_id,
+            category_id
+        )
+    )
+
+    notes = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return notes

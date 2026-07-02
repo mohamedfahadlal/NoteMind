@@ -112,6 +112,27 @@ def search():
             query
         )
 
+    for note in notes:
+
+        category = fetch_note_category(
+            note["id"]
+        )
+
+        note["category"] = (
+            category["name"]
+            if category
+            else "Uncategorized"
+        )
+
+        tags = fetch_note_tags(
+            note["id"]
+        )
+
+        note["tags"] = ", ".join(
+            tag["tag_name"]
+            for tag in tags
+        )
+
     return render_template(
         "search.html",
         notes=notes,

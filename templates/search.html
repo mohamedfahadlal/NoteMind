@@ -15,38 +15,52 @@
         type="text"
         name="q"
         value="{{ query }}"
-        placeholder="Search..."
-        required
+        placeholder="Search notes..."
     >
 
-    <button type="submit">
+    <select name="category">
+
+        <option value="">
+            All Categories
+        </option>
+
+        {% for category in categories %}
+
+            <option
+                value="{{ category.id }}"
+                {% if selected_category == category.id|string %}
+                    selected
+                {% endif %}
+            >
+                {{ category.name }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+    <button>
         Search
     </button>
 
 </form>
 
+
+
+{% if query %}
+<p>
+    Showing results for:
+    <strong>{{ query }}</strong>
+</p>
+{% endif %}
+
+{% if selected_category %}
+<p>
+    Category filter applied.
+</p>
+{% endif %}
+
 <hr>
-
-<select name="category">
-
-    <option value="">
-        All Categories
-    </option>
-
-    {% for category in categories %}
-
-        <option
-            value="{{ category.id }}"
-            {% if selected_category == category.id|string %}
-                selected
-            {% endif %}
-        >
-            {{ category.name }}
-        </option>
-
-    {% endfor %}
-
-</select>
 
 {% if notes %}
 
@@ -54,17 +68,35 @@
 
         <h3>{{ note.title }}</h3>
 
-        <p>{{ note.file_name }}</p>
+        <p>
+            <strong>File:</strong>
+            {{ note.file_name }}
+        </p>
+
+        <p>
+            <strong>Category:</strong>
+            {{ note.category }}
+        </p>
+
+        <p>
+            <strong>Tags:</strong>
+            {{ note.tags if note.tags else "No tags" }}
+        </p>
+
+        <p>
+            <strong>Uploaded:</strong>
+            {{ note.uploaded_at }}
+        </p>
 
         <a href="/note/{{ note.id }}">
-            Open
+            Open Note
         </a>
 
         <hr>
 
     {% endfor %}
 
-{% elif query %}
+{% elif query or selected_category %}
 
     <p>No matching notes found.</p>
 

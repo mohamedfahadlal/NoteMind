@@ -433,3 +433,56 @@ def search_notes_by_category(
     conn.close()
 
     return notes
+def get_all_tags():
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM tags
+        ORDER BY tag_name
+        """
+    )
+
+    tags = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return tags
+
+def search_notes_by_tag(
+    user_id,
+    tag_id
+):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT n.*
+        FROM notes n
+        JOIN note_tags nt
+            ON n.id = nt.note_id
+        WHERE
+            n.user_id = %s
+            AND nt.tag_id = %s
+        ORDER BY n.uploaded_at DESC
+        """,
+        (
+            user_id,
+            tag_id
+        )
+    )
+
+    notes = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return notes

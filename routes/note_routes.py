@@ -8,7 +8,7 @@ from flask import (
     send_file
 )
 
-from services.note_service import save_note,fetch_user_notes,fetch_note,fetch_note_category,fetch_note_tags,search_user_notes,search_by_category,fetch_categories
+from services.note_service import save_note,fetch_user_notes,fetch_note,fetch_note_category,fetch_note_tags,search_user_notes,search_by_category,fetch_categories,fetch_tags,search_by_tag
 
 note_bp = Blueprint(
     "notes",
@@ -94,11 +94,22 @@ def search():
     query = request.args.get("q", "").strip()
     category = request.args.get("category", "")
 
+    tag = request.args.get("tag","")
+
     categories = fetch_categories()
+
+    tags = fetch_tags()
 
     notes = []
 
-    if category:
+    if tag:
+
+        notes = search_by_tag(
+            session["user_id"],
+            int(tag)
+        )
+
+    elif category:
 
         notes = search_by_category(
             session["user_id"],
@@ -134,9 +145,11 @@ def search():
         )
 
     return render_template(
-        "search.html",
-        notes=notes,
-        query=query,
-        categories=categories,
-        selected_category=category
-    )
+    "search.html",
+    notes=notes,
+    query=query,
+    categories=categories,
+    tags=tags,
+    selected_category=category,
+    selected_tag=tag
+)

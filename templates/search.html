@@ -39,6 +39,27 @@
 
     </select>
 
+    <select name="tag">
+
+        <option value="">
+            All Tags
+        </option>
+
+        {% for tag in tags %}
+
+            <option
+                value="{{ tag.id }}"
+                {% if selected_tag == tag.id|string %}
+                    selected
+                {% endif %}
+            >
+                {{ tag.tag_name }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
     <button>
         Search
     </button>

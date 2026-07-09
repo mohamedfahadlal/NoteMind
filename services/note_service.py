@@ -2,10 +2,11 @@ import os
 
 from werkzeug.utils import secure_filename
 
-from models.note_model import create_note,get_notes_by_user,get_note_by_id,update_note_content,get_note_category,get_note_tags,search_notes,save_search_history,get_all_categories,search_notes_by_category,get_all_tags,search_notes_by_tag
+from models.note_model import create_note,get_notes_by_user,get_note_by_id,update_note_content,get_note_category,get_note_tags,search_notes,save_search_history,get_all_categories,search_notes_by_category,get_all_tags,search_notes_by_tag,save_summary
 from services.text_extractor import extract_txt,extract_docx,extract_pdf
 from services.category_assignment import auto_assign_category
 from services.tag_assignment import auto_assign_tags
+from services.summary_service import generate_summary
 
 
 ALLOWED_EXTENSIONS = {
@@ -64,8 +65,13 @@ def save_note(uploaded_file,title,user_id,upload_folder):
     if content:
 
         update_note_content(note_id,content)
+
         auto_assign_category(note_id,content)
+
         auto_assign_tags(note_id,content)
+
+        summary = generate_summary(content)
+        save_summary(note_id,summary)
     return True
 
 def fetch_user_notes(user_id):

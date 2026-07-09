@@ -486,3 +486,40 @@ def search_notes_by_tag(
     conn.close()
 
     return notes
+
+
+def save_summary(
+    note_id,
+    summary
+):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO summaries
+        (
+            note_id,
+            summary_text
+        )
+        VALUES
+        (
+            %s,
+            %s
+        )
+        ON CONFLICT(note_id)
+        DO UPDATE SET
+            summary_text = EXCLUDED.summary_text
+        """,
+        (
+            note_id,
+            summary
+        )
+    )
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()

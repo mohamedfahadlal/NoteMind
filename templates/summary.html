@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>
+Summary
+</title>
+
+</head>
+
+
+<body>
+
+
+<h2>
+{{ note.title }}
+</h2>
+
+
+<h3>
+Generated Summary
+</h3>
+
+
+{% if summary %}
+
+<p>
+{{ summary.summary_text }}
+</p>
+
+{% else %}
+
+<p>
+No summary available.
+</p>
+
+{% endif %}
+
+
+<a href="/my-notes">
+Back
+</a>
+
+
+</body>
+
+</html>

@@ -8,7 +8,7 @@ from flask import (
     send_file
 )
 
-from services.note_service import save_note,fetch_user_notes,fetch_note,fetch_note_category,fetch_note_tags,search_user_notes,search_by_category,fetch_categories,fetch_tags,search_by_tag
+from services.note_service import save_note,fetch_user_notes,fetch_note,fetch_note_category,fetch_note_tags,search_user_notes,search_by_category,fetch_categories,fetch_tags,search_by_tag,fetch_summary
 
 note_bp = Blueprint(
     "notes",
@@ -153,3 +153,32 @@ def search():
     selected_category=category,
     selected_tag=tag
 )
+
+@note_bp.route("/summary/<int:note_id>")
+def view_summary(note_id):
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+
+    note = fetch_note(note_id)
+
+
+    if not note:
+        return "Note not found"
+
+
+    if note["user_id"] != session["user_id"]:
+        return "Access Denied"
+
+
+    summary = fetch_summary(
+        note_id
+    )
+
+
+    return render_template(
+        "summary.html",
+        note=note,
+        summary=summary
+    )

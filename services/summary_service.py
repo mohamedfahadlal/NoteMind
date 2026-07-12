@@ -2,10 +2,7 @@ import nltk
 
 from nltk.tokenize import sent_tokenize
 
-nltk.download(
-    "punkt",
-    quiet=True
-)
+
 
 
 def generate_summary(content):

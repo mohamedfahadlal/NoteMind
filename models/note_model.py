@@ -523,3 +523,27 @@ def save_summary(
 
     cursor.close()
     conn.close()
+
+def get_summary(note_id):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM summaries
+        WHERE note_id = %s
+        """,
+        (
+            note_id,
+        )
+    )
+
+    summary = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    return summary

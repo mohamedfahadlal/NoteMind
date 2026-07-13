@@ -9,6 +9,7 @@ from services.tag_assignment import auto_assign_tags
 from services.summary_service import generate_summary
 
 from services.question_service import find_best_paragraph
+from services.recommendation_service import find_similar_notes
 
 
 ALLOWED_EXTENSIONS = {
@@ -170,3 +171,24 @@ def answer_question(
         return "Sorry, I couldn't find an answer to that question in this note."
 
     return answer
+
+def fetch_similar_notes(
+    note_id,
+    user_id
+):
+
+    current_note = get_note_by_id(
+        note_id
+    )
+
+    if not current_note:
+        return []
+
+    all_notes = get_notes_by_user(
+        user_id
+    )
+
+    return find_similar_notes(
+        current_note,
+        all_notes
+    )

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>{{ note.title }}</title>
+
+</head>
+
+<body>
+
+<h2>{{ note.title }}</h2>
+
+<p>
+
+<strong>Category:</strong>
+
+{{ note.category if note.category else "Unknown" }}
+
+</p>
+
+<p>
+
+<strong>File:</strong>
+
+{{ note.file_name }}
+
+</p>
+
+<hr>
+
+<h3>Similar Notes</h3>
+
+{% if similar_notes %}
+
+<ul>
+
+{% for similar in similar_notes %}
+
+<li>
+
+{{ similar.title }}
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+{% else %}
+
+<p>No similar notes found.</p>
+
+{% endif %}
+
+<br>
+
+<a href="/my-notes">
+
+Back
+
+</a>
+
+</body>
+
+</html>

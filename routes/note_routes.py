@@ -8,7 +8,7 @@ from flask import (
     send_file
 )
 
-from services.note_service import save_note,fetch_user_notes,fetch_note,fetch_note_category,fetch_note_tags,search_user_notes,search_by_category,fetch_categories,fetch_tags,search_by_tag,fetch_summary,answer_question
+from services.note_service import save_note,fetch_user_notes,fetch_note,fetch_note_category,fetch_note_tags,search_user_notes,search_by_category,fetch_categories,fetch_tags,search_by_tag,fetch_summary,answer_question,fetch_similar_notes
 
 note_bp = Blueprint(
     "notes",
@@ -219,3 +219,29 @@ def ask_question(note_id):
     question=question,
     answer=answer
 )
+
+
+@note_bp.route("/note-info/<int:note_id>")
+def note_info(note_id):
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    note = fetch_note(note_id)
+
+    if not note:
+        return "Note not found"
+
+    if note["user_id"] != session["user_id"]:
+        return "Access Denied"
+
+    similar_notes = fetch_similar_notes(
+        note_id,
+        session["user_id"]
+    )
+
+    return render_template(
+        "note_info.html",
+        note=note,
+        similar_notes=similar_notes
+    )

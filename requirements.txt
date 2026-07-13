@@ -8,11 +8,16 @@ Jinja2==3.1.6
 joblib==1.5.3
 lxml==6.1.1
 MarkupSafe==3.0.3
+narwhals==2.24.0
 nltk==3.10.0
+numpy==2.5.1
 psycopg2-binary==2.9.12
 PyPDF2==3.0.1
 python-docx==1.2.0
 regex==2026.6.28
+scikit-learn==1.9.0
+scipy==1.18.0
+threadpoolctl==3.6.0
 tqdm==4.68.4
 typing_extensions==4.15.0
 Werkzeug==3.1.8

@@ -8,6 +8,8 @@ from services.category_assignment import auto_assign_category
 from services.tag_assignment import auto_assign_tags
 from services.summary_service import generate_summary
 
+from services.question_service import find_best_paragraph
+
 
 ALLOWED_EXTENSIONS = {
     "pdf",
@@ -144,4 +146,27 @@ def fetch_summary(note_id):
     return get_summary(note_id)
 
 
+def answer_question(
+    note_id,
+    question
+):
 
+    note = get_note_by_id(
+        note_id
+    )
+
+    if not note:
+        return "Note not found."
+
+    if not note["content"]:
+        return "This note does not contain extracted text."
+
+    answer = find_best_paragraph(
+        note["content"],
+        question
+    )
+
+    if not answer:
+        return "Sorry, I couldn't find an answer to that question in this note."
+
+    return answer

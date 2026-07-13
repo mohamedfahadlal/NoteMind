@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Ask Question</title>
+</head>
+
+<body>
+
+<h2>{{ note.title }}</h2>
+
+<form method="POST">
+
+    <textarea
+    name="question"
+    rows="3"
+    cols="60"
+    placeholder="Ask a question about this note..."
+>{{ question }}</textarea>
+
+    <br><br>
+
+    <button type="submit">
+        Ask
+    </button>
+
+</form>
+
+{% if answer %}
+
+<hr>
+
+<h3>Answer</h3>
+
+<div>
+
+    {{ answer }}
+
+</div>
+
+{% endif %}
+
+<br>
+
+<a href="/my-notes">
+Back
+</a>
+
+</body>
+
+</html>

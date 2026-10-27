@@ -43,14 +43,6 @@ def dashboard():
         user_name=session["user_name"]
     )
 
-@app.route("/upload")
-def upload():
-
-    if "user_id" not in session:
-        return redirect("/login")
-
-    return "Upload Page Coming Soon"
-
 
 
 

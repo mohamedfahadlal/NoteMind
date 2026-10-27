@@ -81,6 +81,12 @@
 </p>
 {% endif %}
 
+{% if selected_tag %}
+<p>
+    Tag filter applied.
+</p>
+{% endif %}
+
 <hr>
 
 {% if notes %}
@@ -117,7 +123,7 @@
 
     {% endfor %}
 
-{% elif query or selected_category %}
+{% elif query or selected_category or selected_tag %}
 
     <p>No matching notes found.</p>
 

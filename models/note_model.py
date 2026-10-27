@@ -547,3 +547,59 @@ def get_summary(note_id):
     conn.close()
 
     return summary
+
+
+def filter_notes(
+    user_id,
+    query=None,
+    category_id=None,
+    tag_id=None
+):
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+    sql = """
+    SELECT n.*
+    FROM notes n
+    WHERE n.user_id = %s
+    """
+    params = [user_id]
+
+    if query:
+        sql += """ AND (
+            n.title ILIKE %s
+            OR n.content ILIKE %s
+        )"""
+        search_pattern = f"%{query}%"
+        params.extend([search_pattern, search_pattern])
+
+    if category_id:
+        sql += """ AND EXISTS (
+            SELECT 1
+            FROM note_categories nc
+            WHERE nc.note_id = n.id
+              AND nc.category_id = %s
+        )"""
+        params.append(category_id)
+
+    if tag_id:
+        sql += """ AND EXISTS (
+            SELECT 1
+            FROM note_tags nt
+            WHERE nt.note_id = n.id
+              AND nt.tag_id = %s
+        )"""
+        params.append(tag_id)
+
+    sql += " ORDER BY n.uploaded_at DESC"
+
+    cursor.execute(sql, tuple(params))
+
+    notes = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return notes

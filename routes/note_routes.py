@@ -8,7 +8,22 @@ from flask import (
     send_file
 )
 
-from services.note_service import save_note,fetch_user_notes,fetch_note,fetch_note_category,fetch_note_tags,search_user_notes,search_by_category,fetch_categories,fetch_tags,search_by_tag,fetch_summary,answer_question,fetch_similar_notes
+from services.note_service import (
+    save_note,
+    fetch_user_notes,
+    fetch_note,
+    fetch_note_category,
+    fetch_note_tags,
+    search_user_notes,
+    search_by_category,
+    fetch_categories,
+    fetch_tags,
+    search_by_tag,
+    fetch_summary,
+    answer_question,
+    fetch_similar_notes,
+    search_notes_unified
+)
 
 note_bp = Blueprint(
     "notes",
@@ -92,67 +107,52 @@ def search():
         return redirect("/login")
 
     query = request.args.get("q", "").strip()
-    category = request.args.get("category", "")
-
-    tag = request.args.get("tag","")
+    category = request.args.get("category", "").strip()
+    tag = request.args.get("tag", "").strip()
 
     categories = fetch_categories()
-
     tags = fetch_tags()
 
-    notes = []
+    category_id = int(category) if category and category.isdigit() else None
+    tag_id = int(tag) if tag and tag.isdigit() else None
 
-    if tag:
-
-        notes = search_by_tag(
-            session["user_id"],
-            int(tag)
-        )
-
-    elif category:
-
-        notes = search_by_category(
-            session["user_id"],
-            int(category)
-        )
-
-    elif query:
-
-        notes = search_user_notes(
-            session["user_id"],
-            query
-        )
+    notes = search_notes_unified(
+        session["user_id"],
+        query=query if query else None,
+        category_id=category_id,
+        tag_id=tag_id
+    )
 
     for note in notes:
 
-        category = fetch_note_category(
+        category_data = fetch_note_category(
             note["id"]
         )
 
         note["category"] = (
-            category["name"]
-            if category
+            category_data["name"]
+            if category_data
             else "Uncategorized"
         )
 
-        tags = fetch_note_tags(
+        tag_list = fetch_note_tags(
             note["id"]
         )
 
         note["tags"] = ", ".join(
-            tag["tag_name"]
-            for tag in tags
+            t["tag_name"]
+            for t in tag_list
         )
 
     return render_template(
-    "search.html",
-    notes=notes,
-    query=query,
-    categories=categories,
-    tags=tags,
-    selected_category=category,
-    selected_tag=tag
-)
+        "search.html",
+        notes=notes,
+        query=query,
+        categories=categories,
+        tags=tags,
+        selected_category=category,
+        selected_tag=tag
+    )
 
 @note_bp.route("/summary/<int:note_id>")
 def view_summary(note_id):
@@ -234,6 +234,12 @@ def note_info(note_id):
 
     if note["user_id"] != session["user_id"]:
         return "Access Denied"
+
+    category = fetch_note_category(note_id)
+    note["category"] = category["name"] if category else "Uncategorized"
+
+    tags = fetch_note_tags(note_id)
+    note["tags"] = ", ".join(tag["tag_name"] for tag in tags)
 
     similar_notes = fetch_similar_notes(
         note_id,

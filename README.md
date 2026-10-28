@@ -37,16 +37,36 @@ The exact structure may vary as development continues. A typical layout is:
 ```text
 NoteMind/
 ├── app.py
+├── config.py
+├── init_db.py
+├── schema.sql
+├── database/
+│   ├── config.py
+│   ├── connection.py
+│   ├── init_db.py
+│   ├── migrations.py
+│   └── schema.sql
+├── migrations/
+│   └── 001_initial_schema.sql
+├── models/
+│   ├── note_model.py
+│   └── user_model.py
 ├── routes/
+│   ├── auth_routes.py
 │   └── note_routes.py
 ├── services/
-│   ├── text_extractor.py
-│   └── category_assignment.py
+│   ├── auth_service.py
+│   ├── category_assignment.py
+│   ├── category_service.py
+│   ├── keywords.py
+│   ├── note_service.py
+│   ├── question_service.py
+│   ├── recommendation_service.py
+│   ├── summary_service.py
+│   ├── tag_assignment.py
+│   ├── tag_service.py
+│   └── text_extractor.py
 ├── templates/
-├── static/
-│   ├── css/
-│   ├── js/
-│   └── ...
 ├── uploads/
 ├── requirements.txt
 ├── .env
@@ -54,13 +74,15 @@ NoteMind/
 └── README.md
 ```
 
-- `app.py` — creates/configures the Flask application and registers routes.
+- `app.py` — creates/configures the Flask application and registers routes & CLI commands (`flask init-db`, `flask migrate-db`).
+- `init_db.py` / `database/init_db.py` — automated database initialization script for new environments.
+- `schema.sql` / `database/schema.sql` — PostgreSQL DDL defining all required tables, relations, and indexes.
+- `migrations/` — ordered SQL migration scripts managed by `database/migrations.py`.
 - `routes/` — request and page-handling logic.
-- `services/text_extractor.py` — extracts text from supported uploaded file formats.
-- `services/category_assignment.py` — categorization-related logic.
+- `models/` — database query and data persistence functions.
+- `services/` — business logic for text extraction, categorization, tagging, summarization, and search.
 - `templates/` — HTML/Jinja templates.
-- `static/` — stylesheets, JavaScript, and other frontend assets.
-- `uploads/` — uploaded files, if the project stores them locally.
+- `uploads/` — uploaded study materials and documents.
 
 Your repository may contain additional route and service modules; keep the README structure in sync with the actual files.
 
@@ -157,7 +179,35 @@ DB_PORT=5432
 
 These names are examples; match them to the configuration code in your repository. Do not commit `.env` or real credentials to Git.
 
-### 7. Run the application
+### 7. Initialize the database schema
+
+Initialize all required tables, indexes, and default categories:
+
+```bash
+python init_db.py
+```
+
+Alternatively, you can initialize the database using the Flask CLI:
+
+```bash
+flask init-db
+```
+
+Or execute the schema SQL directly with `psql`:
+
+```bash
+psql -U notemind_user -d notemind -f schema.sql
+```
+
+Available database setup commands:
+
+- `python init_db.py` — creates all tables, foreign keys, indexes, and seeds default categories.
+- `python init_db.py --check` — verifies connectivity and confirms all required tables are present.
+- `python init_db.py --migrate` — discovers and applies any pending migrations in `migrations/`.
+- `python init_db.py --drop` — drops and recreates all tables (use with caution: removes all data).
+- `python database/migrations.py --status` — displays migration status (applied vs pending).
+
+### 8. Run the application
 
 For a Flask application configured through `app.py`, try:
 
